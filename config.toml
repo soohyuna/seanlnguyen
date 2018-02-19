@@ -3,7 +3,7 @@
 
 # The URL of your website.
 # End your URL with a `/` trailing slash, e.g. `https://example.com/`.
-baseurl = "https://seanlnguyen.com/"
+baseurl = "/"
 
 # Title of your site
 title = "Sean Nguyen"
@@ -223,12 +223,12 @@ defaultContentLanguageInSubdir = false
     icon = "twitter"
     icon_pack = "fa"
     link = "//twitter.com/seanlnguyen"
-    
+
   [[params.social]]
     icon = "github"
     icon_pack = "fa"
     link = "//github.com/nguyens7"
-    
+
   [[params.social]]
     icon = "linkedin"
     icon_pack = "fa"
