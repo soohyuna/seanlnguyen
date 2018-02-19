@@ -5,13 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "3340192709",
+    "hash" : "1976767769",
     "id" : "749569E1",
-    "lastKnownWriteTime" : 1519009814,
-    "last_content_update" : 1519009814,
+    "lastKnownWriteTime" : 1519012622,
+    "last_content_update" : 1519012622220,
     "path" : "~/Library/Mobile Documents/com~apple~CloudDocs/thebigpicture/config.toml",
     "project_path" : "config.toml",
     "properties" : {
+        "cursorPosition" : "262,0",
+        "scrollLine" : "248"
     },
     "relative_order" : 1,
     "source_on_save" : false,
