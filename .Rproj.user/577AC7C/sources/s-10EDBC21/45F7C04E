@@ -1,21 +1,21 @@
 {
     "collab_server" : "",
     "contents" : "",
-    "created" : 1519012865654.000,
+    "created" : 1519014604587.000,
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "452511037",
-    "id" : "18651379",
-    "lastKnownWriteTime" : 1519012875,
-    "last_content_update" : 1519012875241,
+    "hash" : "1671258550",
+    "id" : "45F7C04E",
+    "lastKnownWriteTime" : 1519014617,
+    "last_content_update" : 1519014617180,
     "path" : "~/Library/Mobile Documents/com~apple~CloudDocs/thebigpicture/content/home/hero.md",
     "project_path" : "content/home/hero.md",
     "properties" : {
-        "cursorPosition" : "22,18",
+        "cursorPosition" : "15,32",
         "scrollLine" : "6"
     },
-    "relative_order" : 2,
+    "relative_order" : 3,
     "source_on_save" : false,
     "source_window" : "",
     "type" : "markdown"

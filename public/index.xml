@@ -11,6 +11,149 @@
     <atom:link href="/" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>The World’s Most Powerful Rocket</title>
+      <link>/post/the-world-s-most-powerful-rocket/</link>
+      <pubDate>Sun, 18 Feb 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/the-world-s-most-powerful-rocket/</guid>
+      <description>&lt;div id=&#34;for-now&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;For Now…&lt;/h2&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;https://i.imgur.com/AgP1Q6s.jpg&#34; /&gt;
+
+&lt;/div&gt;
+&lt;p&gt;SpaceX launched Falcon Heavy this week and I remembered how Elon Musk noted that it would have twice the thrust of any rocket currently in existence. I was intrigued by this statement and decided to look further and compare the thrusts of other rockets of the past and rockets that are planned in the future.&lt;/p&gt;
+&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;en&#34; dir=&#34;ltr&#34;&gt;Falcon Heavy thrust will be 5.1M lbf at liftoff --  twice any rocket currently flying. It&amp;#39;s a beast...&lt;/p&gt;&amp;mdash; Elon Musk (@elonmusk) &lt;a href=&#34;https://twitter.com/elonmusk/status/726651603906785285?ref_src=twsrc%5Etfw&#34;&gt;May 1, 2016&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;First, I used the &lt;a href=&#34;https://github.com/hadley/rvest&#34;&gt;rvest&lt;/a&gt; package to scrape the data then get the information in a dataframe using the tidyverse. Next I used stringr to clean up the strings in the dataframe and plotted it using ggplot (tidyverse) as well as cowplot and RColorBrewer to improve the look of the plot.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(rvest)
+library(stringr)
+library(cowplot)
+library(tidyverse)
+library(RColorBrewer)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;One of the first steps is to find a website that has the information of interest, in my case I found an article on CNN.com and then I used the &lt;a href=&#34;http://selectorgadget.com/&#34;&gt;selector gadget&lt;/a&gt; tool to determine the correct xpath to get the information I wanted. Since the information I wanted wasn’t in a table format I had a rather long xpath.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;site &amp;lt;- read_html(&amp;quot;http://money.cnn.com/2018/02/06/technology/future/biggest-rockets-falcon-heavy-comparison/index.html&amp;quot;)
+
+data &amp;lt;- &amp;#39;//p[(((count(preceding-sibling::*) + 1) = 67) and parent::*)] | 
+        //p[(((count(preceding-sibling::*) + 1) = 66) and parent::*)] |
+        //p[(((count(preceding-sibling::*) + 1) = 65) and parent::*)] |
+        //p[(((count(preceding-sibling::*) + 1) = 64) and parent::*)] |
+        //p[(((count(preceding-sibling::*) + 1) = 59) and parent::*)] |
+        //p[(((count(preceding-sibling::*) + 1) = 60) and parent::*)] |
+        //p[(((count(preceding-sibling::*) + 1) = 58) and parent::*)] |
+        //p[(((count(preceding-sibling::*) + 1) = 57) and parent::*)] |
+        //p[(((count(preceding-sibling::*) + 1) = 51) and parent::*)] |
+        //p[(((count(preceding-sibling::*) + 1) = 50) and parent::*)] |
+        //p[(((count(preceding-sibling::*) + 1) = 49) and parent::*)] |
+        //p[(((count(preceding-sibling::*) + 1) = 48) and parent::*)] |
+        //p[(((count(preceding-sibling::*) + 1) = 43) and parent::*)] |
+        //p[(((count(preceding-sibling::*) + 1) = 42) and parent::*)] |
+        //p[(((count(preceding-sibling::*) + 1) = 41) and parent::*)] |
+        //p[(((count(preceding-sibling::*) + 1) = 40) and parent::*)] |
+        //p[(((count(preceding-sibling::*) + 1) = 35) and parent::*)] |
+        //p[(((count(preceding-sibling::*) + 1) = 34) and parent::*)] |
+        //p[(((count(preceding-sibling::*) + 1) = 33) and parent::*)] |
+        //p[(((count(preceding-sibling::*) + 1) = 32) and parent::*)] |
+        //p[(((count(preceding-sibling::*) + 1) = 26) and parent::*)] |
+        //p[(((count(preceding-sibling::*) + 1) = 25) and parent::*)] |
+        //p[(((count(preceding-sibling::*) + 1) = 24) and parent::*)] |
+        //p[(((count(preceding-sibling::*) + 1) = 23) and parent::*)] |
+        //p[(((count(preceding-sibling::*) + 1) = 17) and parent::*)] |
+        //p[(((count(preceding-sibling::*) + 1) = 16) and parent::*)] |
+        //p[(((count(preceding-sibling::*) + 1) = 15) and parent::*)] |
+        //p[(((count(preceding-sibling::*) + 1) = 14) and parent::*)] |
+        //*[contains(concat( &amp;quot; &amp;quot;, @class, &amp;quot; &amp;quot; ), concat( &amp;quot; &amp;quot;, &amp;quot;inStoryHeading&amp;quot;, &amp;quot; &amp;quot; ))]&amp;#39;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Next I used rvest to read scrape the information extract the text and make it into a tibble. The tibble wasn’t in the proper format so I had to do some data wrangling to tidy it up so I used mutate to create another column so I could extract out the rocket names and make another dataframe and then perform a join with the original dataset.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;table &amp;lt;- site %&amp;gt;% 
+  html_nodes(xpath = data) %&amp;gt;% 
+  html_text() %&amp;gt;% 
+  tibble() %&amp;gt;% 
+  mutate(ID = seq(1,5,1) %&amp;gt;% rep(7) %&amp;gt;% as.factor())
+table&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 35 x 2
+##    .                                                                 ID   
+##    &amp;lt;chr&amp;gt;                                                             &amp;lt;fct&amp;gt;
+##  1 Falcon Heavy                                                      1    
+##  2 &amp;quot; Status: First test flight took place February 6 &amp;quot;               2    
+##  3 &amp;quot; Height: 229.6 feet (70 meters) &amp;quot;                                3    
+##  4 &amp;quot; Liftoff thrust: 5 million pounds &amp;quot;                              4    
+##  5 &amp;quot; Capability: 140,660 pounds (63,800 kilograms) to LEO &amp;quot;          5    
+##  6 Space Launch System                                               1    
+##  7 &amp;quot; Status: No earlier than late 2019 &amp;quot;                             2    
+##  8 &amp;quot; Height: 322 - 365 feet (98.1 - 111.3 meters) &amp;quot;                  3    
+##  9 &amp;quot; Liftoff thrust: up to 11.9 million pounds (5 million kg) &amp;quot;      4    
+## 10 &amp;quot; Capability: 150,000 - 290,000 pounds (70,000 - 130,000 kilogra… 5    
+## # ... with 25 more rows&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;After the rocket names were isolated I needed to repeat them multiple times to match with the ‘table’ dataframe.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;names &amp;lt;- table %&amp;gt;%
+  filter(ID == 1) %&amp;gt;% 
+  slice(rep(1:7, each=4)) # Repeats each row  4 times
+names&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 28 x 2
+##    .                   ID   
+##    &amp;lt;chr&amp;gt;               &amp;lt;fct&amp;gt;
+##  1 Falcon Heavy        1    
+##  2 Falcon Heavy        1    
+##  3 Falcon Heavy        1    
+##  4 Falcon Heavy        1    
+##  5 Space Launch System 1    
+##  6 Space Launch System 1    
+##  7 Space Launch System 1    
+##  8 Space Launch System 1    
+##  9 &amp;quot;Saturn V &amp;quot;         1    
+## 10 &amp;quot;Saturn V &amp;quot;         1    
+## # ... with 18 more rows&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The next step is to combine the ‘names’ dataframe with the original ‘table’ and then clean up the column names using rename. One of the trickiest parts of data wrangling is string manipulations and regular expressions (regex) which can be hard to grasp at first. Typically when you scrape data, you’ll inevitably get more information than you want or need so we can use regex to extract the specific information that we want. In this case, I used str_replace_all to find a specific pattern and replace it with nothing so I just have the infromation that I want (numerical values in my case).&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;df &amp;lt;- table %&amp;gt;%
+  filter(!ID == 1) %&amp;gt;% 
+  bind_cols(names) %&amp;gt;%
+  rename(Data = &amp;quot;.&amp;quot;, Rocket = &amp;quot;.1&amp;quot;) %&amp;gt;% 
+  separate(Data , into = c(&amp;quot;Feature&amp;quot;,&amp;quot;Value&amp;quot;), sep =&amp;quot;:&amp;quot;) %&amp;gt;% 
+  select(Rocket, Feature, Value) %&amp;gt;% 
+  mutate(Value = str_replace_all(Value, &amp;quot;\\s*\\([^\\)]+\\)|[:alpha:]|\\s*&amp;quot;,&amp;quot;&amp;quot;), # regex
+         Feature = str_trim(Feature))
+df&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 28 x 3
+##    Rocket              Feature        Value          
+##    &amp;lt;chr&amp;gt;               &amp;lt;chr&amp;gt;          &amp;lt;chr&amp;gt;          
+##  1 Falcon Heavy        Status         6              
+##  2 Falcon Heavy        Height         229.6          
+##  3 Falcon Heavy        Liftoff thrust 5              
+##  4 Falcon Heavy        Capability     140,660        
+##  5 Space Launch System Status         2019           
+##  6 Space Launch System Height         322-365        
+##  7 Space Launch System Liftoff thrust 11.9           
+##  8 Space Launch System Capability     150,000-290,000
+##  9 &amp;quot;Saturn V &amp;quot;         Status         1973           
+## 10 &amp;quot;Saturn V &amp;quot;         Height         363            
+## # ... with 18 more rows&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now that we have a tidy dataframe we can graph it by filtering the liftoff thrust data and then changing the Value column type to numeric and make sure we reorder the Rockets by value with the fct_reorder function. I manually specified the y axis scale and added the YlOrRd pallette to exentuate the thrust of the various rockets.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;thrust_plot &amp;lt;- df %&amp;gt;% 
+  filter(Feature == &amp;quot;Liftoff thrust&amp;quot;) %&amp;gt;% 
+  mutate(Value = Value %&amp;gt;% as.numeric(),
+         Rocket = fct_reorder(Rocket,Value)) %&amp;gt;% 
+  ggplot(aes(x = Rocket, y = Value, fill = Rocket )) +
+  geom_col()+
+  coord_flip() +
+  scale_y_continuous(expand= c(0,0), limits = c(0,12),breaks = seq(0,12,2))+
+  guides(fill = FALSE) +
+  scale_fill_brewer(palette=&amp;quot;YlOrRd&amp;quot;) + 
+  labs(title = &amp;quot;Rocket Thrust&amp;quot;,
+       x = &amp;quot;&amp;quot;,
+       y = &amp;quot;Thrust (Millions of pounds)&amp;quot;)
+
+thrust_plot&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2018-02-18-the-world-s-most-powerful-rocket_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;768&#34; /&gt; We can see that Falcon Heavy may very well be the &lt;em&gt;currently&lt;/em&gt; world’s most powerful rocket but we see that the decommissioned Saturn V, Space Shuttle had more thrust and the soon to be built Space Launch System will have the most thrust by far. Although Falcon Heavy isn’t the most poweful rocket of all time it is definitely one of the coolest, just take a look at the booster rockets landing simultaneously after launch!&lt;/p&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;https://media.giphy.com/media/3ohs4gSs3V0Q7qOtKU/giphy.gif&#34; alt=&#34;Falcon Heavy Booster Landing&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;Falcon Heavy Booster Landing&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Example Talk</title>
       <link>/talk/example-talk/</link>
       <pubDate>Sun, 01 Jan 2017 00:00:00 -0500</pubDate>
